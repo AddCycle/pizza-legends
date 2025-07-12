@@ -1,4 +1,5 @@
 import { GameObject } from "./GameObject.js";
+import { utils } from "./utils.js";
 
 export class Person extends GameObject {
   constructor(config) {
@@ -19,7 +20,7 @@ export class Person extends GameObject {
     if (this.movingProgressRemaining > 0) {
       this.updatePosition();
     } else {
-      if (this.isPlayerControlled && state.arrow) {
+      if (!state.map.isCutscenePlaying && this.isPlayerControlled && state.arrow) {
         this.startBehaviour(state, {
           type: "walk",
           direction: state.arrow,
@@ -33,11 +34,23 @@ export class Person extends GameObject {
     this.direction = behaviour.direction;
     if (behaviour.type === "walk") {
       if (state.map.isSpaceTaken(this.x, this.y, this.direction)) {
+        behaviour.retry && setTimeout(() => {
+          this.startBehaviour(state, behaviour);
+        }, 10)
         return;
       }
 
       state.map.moveWall(this.x, this.y, this.direction);
       this.movingProgressRemaining = 16;
+      this.updateSprite(state);
+    }
+
+    if (behaviour.type === "stand") {
+      setTimeout(() => {
+        utils.emitEvent("PersonStandingComplete", {
+          whoId: this.id,
+        })
+      }, behaviour.time);
     }
   }
 
@@ -45,6 +58,12 @@ export class Person extends GameObject {
     const [property, change] = this.directionUpdate[this.direction];
     this[property] += change;
     this.movingProgressRemaining--;
+
+    if (this.movingProgressRemaining === 0) {
+      utils.emitEvent("PersonWalkingComplete", {
+        whoId: this.id
+      });
+    }
   }
 
   updateSprite() {

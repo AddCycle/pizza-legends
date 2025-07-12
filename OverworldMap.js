@@ -1,4 +1,5 @@
 import { GameObject } from "./GameObject.js";
+import { OverworldEvent } from "./OverworldEvent.js";
 import { Person } from "./Person.js";
 import { utils } from './utils.js';
 
@@ -12,6 +13,8 @@ export class OverworldMap {
 
     this.upperImage = new Image();
     this.upperImage.src = config.upperSrc;
+
+    this.isCutscenePlaying = false;
   }
 
   drawLowerImage(ctx, cameraPerson) {
@@ -28,9 +31,26 @@ export class OverworldMap {
   }
 
   mountObjects() {
-    Object.values(this.gameObjects).forEach(object => {
+    Object.keys(this.gameObjects).forEach(key => {
+      let object = this.gameObjects[key];
+      object.id = key;
       object.mount(this);
     });
+  }
+
+  async startCutscene(events) {
+    this.isCutscenePlaying = true;
+
+    // start a loop of async events and wait for each one
+    for (let i = 0; i < events.length; i++) {
+      const eventHandler = new OverworldEvent({
+        map: this,
+        event: events[i]
+      });
+      await eventHandler.init();
+    }
+
+    this.isCutscenePlaying = false;
   }
 
   addWall(x, y) {
@@ -50,6 +70,7 @@ export class OverworldMap {
 
 const x = utils.withGrid(2);
 const y = utils.withGrid(5);
+
 window.OverworldMaps = {
   DemoRoom: {
     lowerSrc: './src/assets/maps/DemoLower.png',
@@ -57,10 +78,23 @@ window.OverworldMaps = {
     gameObjects: {
       hero: new Person({ x, y, isPlayerControlled: true }),
       npcA: new Person({
-        x: utils.withGrid(7), y: utils.withGrid(9), src: "./src/assets/characters/people/npc1.png"
+        x: utils.withGrid(7), y: utils.withGrid(9), src: "./src/assets/characters/people/npc1.png",
+        behaviourLoop: [
+          { type: "walk", direction: "left" },
+          { type: "stand", direction: "up", time: 800 },
+          { type: "walk", direction: "up" },
+          { type: "walk", direction: "right" },
+          { type: "walk", direction: "down" },
+        ]
       }),
       npcB: new Person({
-        x: utils.withGrid(1), y: utils.withGrid(6), src: "./src/assets/characters/people/npc2.png"
+        x: utils.withGrid(1), y: utils.withGrid(6), src: "./src/assets/characters/people/npc2.png",
+        behaviourLoop: [
+          { type: "stand", direction: "up", time: 800 },
+          { type: "stand", direction: "up", time: 300 },
+          { type: "stand", direction: "right", time: 1200 },
+          { type: "stand", direction: "down", time: 600 },
+        ]
       }),
     },
     walls: {
@@ -75,10 +109,10 @@ window.OverworldMaps = {
     upperSrc: './src/assets/maps/KitchenUpper.png',
     gameObjects: {
       hero: new Person({ x, y, isPlayerControlled: true }),
-      npcA: new GameObject({
+      npcA: new Person({
         x: utils.withGrid(2), y: utils.withGrid(6), src: "./src/assets/characters/people/npc1.png"
       }),
-      npcB: new GameObject({
+      npcB: new Person({
         x: utils.withGrid(4), y: utils.withGrid(4), src: "./src/assets/characters/people/npc2.png"
       }),
     }
