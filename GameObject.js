@@ -11,5 +11,10 @@ export class GameObject {
     });
   }
 
-  update(state) { }
+  mount(map) {
+    this.isMounted = true;
+    map.addWall(this.x, this.y);
+  }
+
+  update() { }
 }
