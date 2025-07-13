@@ -10,33 +10,47 @@ export class Overworld {
     this.ctx = this.canvas.getContext('2d');
   }
 
+  gameLoopStepWork() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    const cameraPerson = this.map.gameObjects.hero;
+
+    Object.values(this.map.gameObjects).forEach(object => {
+      object.update({
+        arrow: this.directionInput.direction,
+        map: this.map,
+      });
+    });
+
+    this.map.drawLowerImage(this.ctx, cameraPerson);
+
+    // drawing objects
+    Object.values(this.map.gameObjects).sort((a, b) => a.y - b.y).forEach(object => {
+      object.sprite.draw(this.ctx, cameraPerson);
+    });
+
+    this.map.drawUpperImage(this.ctx, cameraPerson);
+  }
+
   startGameLoop() {
-    const step = () => {
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    let previous;
+    const fpsHz = 1 / 60;
 
-      const cameraPerson = this.map.gameObjects.hero;
+    const step = (timestamp) => {
+      if (previous === undefined) {
+        previous = timestamp;
+      }
+      let delta = (timestamp - previous) / 1000;
+      while (delta >= fpsHz) {
+        // do the work here when we're the same
+        this.gameLoopStepWork();
+        delta -= fpsHz;
+      }
+      previous = timestamp - delta * 1000;
 
-      Object.values(this.map.gameObjects).forEach(object => {
-        object.update({
-          arrow: this.directionInput.direction,
-          map: this.map,
-        });
-      });
-
-      this.map.drawLowerImage(this.ctx, cameraPerson);
-
-      // drawing objects
-      Object.values(this.map.gameObjects).sort((a, b) => a.y - b.y).forEach(object => {
-        object.sprite.draw(this.ctx, cameraPerson);
-      });
-
-      this.map.drawUpperImage(this.ctx, cameraPerson);
-
-      requestAnimationFrame(() => {
-        step();
-      });
+      requestAnimationFrame(step);
     }
-    step();
+    requestAnimationFrame(step);
   }
 
   bindActionInput() {
@@ -59,7 +73,6 @@ export class Overworld {
     this.map = new OverworldMap(mapConfig);
     this.map.overworld = this;
     this.map.mountObjects();
-
   }
 
   init() {

@@ -14,10 +14,9 @@ export const OverworldMaps = {
         x: utils.withGrid(4), y: utils.withGrid(7), src: "./src/assets/characters/people/npc1.png",
         behaviourLoop: [
           { type: "walk", direction: "left" },
-          { type: "stand", direction: "up", time: 800 },
-          { type: "walk", direction: "up" },
+          { type: "stand", direction: "left", time: 800 },
           { type: "walk", direction: "right" },
-          { type: "walk", direction: "down" },
+          { type: "stand", direction: "right", time: 800 },
         ],
         talking: [
           {
@@ -82,6 +81,15 @@ export const OverworldMaps = {
           }
         ]
       }),
+    },
+    cutsceneSpaces: {
+      [utils.asGridCoord(5, 10)]: [
+        {
+          events: [
+            { type: "changeMap", map: "DemoRoom" },
+          ]
+        }
+      ]
     }
   },
 };
