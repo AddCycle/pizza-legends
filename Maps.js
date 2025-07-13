@@ -1,0 +1,94 @@
+import { Person } from "./Person.js";
+import { utils } from "./utils.js";
+
+const x = utils.withGrid(5);
+const y = utils.withGrid(5);
+
+export const OverworldMaps = {
+  DemoRoom: {
+    lowerSrc: './src/assets/maps/DemoLower.png',
+    upperSrc: './src/assets/maps/DemoUpper.png',
+    gameObjects: {
+      hero: new Person({ x, y, isPlayerControlled: true }),
+      npcA: new Person({
+        x: utils.withGrid(7), y: utils.withGrid(9), src: "./src/assets/characters/people/npc1.png",
+        behaviourLoop: [
+          { type: "walk", direction: "left" },
+          { type: "stand", direction: "up", time: 800 },
+          { type: "walk", direction: "up" },
+          { type: "walk", direction: "right" },
+          { type: "walk", direction: "down" },
+        ],
+        talking: [
+          {
+            events: [
+              { type: "textMessage", text: "HELLO THERE GUY!", faceHero: "npcA" },
+              { type: "textMessage", text: "I'm busy..." },
+              { who: "hero", type: "walk", direction: "up" }
+            ]
+          }
+        ]
+      }),
+      npcB: new Person({
+        x: utils.withGrid(8), y: utils.withGrid(5), src: "./src/assets/characters/people/npc2.png",
+        behaviourLoop: [
+          { type: "stand", direction: "up", time: 800 },
+          { type: "stand", direction: "up", time: 300 },
+          { type: "stand", direction: "right", time: 1200 },
+          { type: "stand", direction: "down", time: 600 },
+        ],
+      }),
+    },
+    walls: {
+      [utils.asGridCoord(7, 6)]: true,
+      [utils.asGridCoord(8, 6)]: true,
+      [utils.asGridCoord(7, 7)]: true,
+      [utils.asGridCoord(8, 7)]: true,
+    },
+    cutsceneSpaces: {
+      [utils.asGridCoord(7, 4)]: [
+        {
+          events: [
+            { who: "npcB", type: "walk", direction: "left" },
+            { who: "npcB", type: "stand", direction: "up", time: 500 },
+            { type: "textMessage", text: "You cannot be in here!" },
+            { who: "npcB", type: "walk", direction: "right" },
+            { who: "hero", type: "walk", direction: "down" },
+            { who: "hero", type: "walk", direction: "left" },
+          ]
+        }
+      ],
+      [utils.asGridCoord(5, 10)]: [
+        {
+          events: [
+            { type: "changeMap", map: "Kitchen" },
+          ]
+        }
+      ]
+    }
+  },
+  Kitchen: {
+    lowerSrc: './src/assets/maps/KitchenLower.png',
+    upperSrc: './src/assets/maps/KitchenUpper.png',
+    gameObjects: {
+      hero: new Person({ x, y, isPlayerControlled: true }),
+      npcA: new Person({
+        x: utils.withGrid(2), y: utils.withGrid(6), src: "./src/assets/characters/people/npc4.png",
+        behaviourLoop: [
+          { type: "walk", direction: "left" },
+          { type: "stand", direction: "up", time: 800 },
+          { type: "walk", direction: "up" },
+          { type: "walk", direction: "right" },
+          { type: "walk", direction: "down" },
+        ],
+        talking: [
+          {
+            events: [
+              { type: "textMessage", text: "HELLO THERE FRIEND, you wanna cook some (not suspiscious) MEDICINE ?", faceHero: "npcA" },
+            ]
+          }
+        ]
+      }),
+    }
+  },
+};

@@ -14,6 +14,8 @@ export class GameObject {
 
     this.behaviourLoop = config.behaviourLoop || [];
     this.behaviourLoopIndex = 0;
+
+    this.talking = config.talking || {};
   }
 
   mount(map) {
@@ -29,7 +31,7 @@ export class GameObject {
 
   async doBehaviourEvent(map) {
 
-    if (map.isCutscenePlaying || this.behaviourLoop.length === 0) {
+    if (map.isCutscenePlaying || this.behaviourLoop.length === 0 || this.isStanding) {
       return;
     }
 

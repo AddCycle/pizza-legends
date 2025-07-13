@@ -5,7 +5,9 @@ import { utils } from './utils.js';
 
 export class OverworldMap {
   constructor(config) {
+    this.overworld = null;
     this.gameObjects = config.gameObjects;
+    this.cutsceneSpaces = config.cutsceneSpaces || {};
     this.walls = config.walls || {};
 
     this.lowerImage = new Image();
@@ -51,6 +53,28 @@ export class OverworldMap {
     }
 
     this.isCutscenePlaying = false;
+
+    // resets NPCs to do their idle behaviour
+    Object.values(this.gameObjects).forEach(object => object.doBehaviourEvent(this));
+  }
+
+  checkForActionCutscene() {
+    const hero = this.gameObjects['hero'];
+    const nextCoords = utils.nextPosition(hero.x, hero.y, hero.direction);
+    const match = Object.values(this.gameObjects).find(object => {
+      return `${object.x}x${object.y}` === `${nextCoords.x}x${nextCoords.y}`;
+    });
+    if (!this.isCutscenePlaying && match && match.talking.length) {
+      this.startCutscene(match.talking[0].events);
+    }
+  }
+
+  checkForFootstepCutscene() {
+    const hero = this.gameObjects['hero'];
+    const match = this.cutsceneSpaces[`${hero.x}x${hero.y}`];
+    if (!this.isCutscenePlaying && match) {
+      this.startCutscene(match[0].events);
+    }
   }
 
   addWall(x, y) {
@@ -67,54 +91,3 @@ export class OverworldMap {
     this.addWall(x, y);
   }
 }
-
-const x = utils.withGrid(2);
-const y = utils.withGrid(5);
-
-window.OverworldMaps = {
-  DemoRoom: {
-    lowerSrc: './src/assets/maps/DemoLower.png',
-    upperSrc: './src/assets/maps/DemoUpper.png',
-    gameObjects: {
-      hero: new Person({ x, y, isPlayerControlled: true }),
-      npcA: new Person({
-        x: utils.withGrid(7), y: utils.withGrid(9), src: "./src/assets/characters/people/npc1.png",
-        behaviourLoop: [
-          { type: "walk", direction: "left" },
-          { type: "stand", direction: "up", time: 800 },
-          { type: "walk", direction: "up" },
-          { type: "walk", direction: "right" },
-          { type: "walk", direction: "down" },
-        ]
-      }),
-      npcB: new Person({
-        x: utils.withGrid(1), y: utils.withGrid(6), src: "./src/assets/characters/people/npc2.png",
-        behaviourLoop: [
-          { type: "stand", direction: "up", time: 800 },
-          { type: "stand", direction: "up", time: 300 },
-          { type: "stand", direction: "right", time: 1200 },
-          { type: "stand", direction: "down", time: 600 },
-        ]
-      }),
-    },
-    walls: {
-      [utils.asGridCoord(7, 6)]: true,
-      [utils.asGridCoord(8, 6)]: true,
-      [utils.asGridCoord(7, 7)]: true,
-      [utils.asGridCoord(8, 7)]: true,
-    }
-  },
-  Kitchen: {
-    lowerSrc: './src/assets/maps/KitchenLower.png',
-    upperSrc: './src/assets/maps/KitchenUpper.png',
-    gameObjects: {
-      hero: new Person({ x, y, isPlayerControlled: true }),
-      npcA: new Person({
-        x: utils.withGrid(2), y: utils.withGrid(6), src: "./src/assets/characters/people/npc1.png"
-      }),
-      npcB: new Person({
-        x: utils.withGrid(4), y: utils.withGrid(4), src: "./src/assets/characters/people/npc2.png"
-      }),
-    }
-  },
-};
