@@ -11,7 +11,7 @@ export const OverworldMaps = {
     gameObjects: {
       hero: new Person({ x, y, isPlayerControlled: true }),
       npcA: new Person({
-        x: utils.withGrid(7), y: utils.withGrid(9), src: "./src/assets/characters/people/npc1.png",
+        x: utils.withGrid(4), y: utils.withGrid(7), src: "./src/assets/characters/people/npc1.png",
         behaviourLoop: [
           { type: "walk", direction: "left" },
           { type: "stand", direction: "up", time: 800 },
@@ -74,13 +74,6 @@ export const OverworldMaps = {
       hero: new Person({ x, y, isPlayerControlled: true }),
       npcA: new Person({
         x: utils.withGrid(2), y: utils.withGrid(6), src: "./src/assets/characters/people/npc4.png",
-        behaviourLoop: [
-          { type: "walk", direction: "left" },
-          { type: "stand", direction: "up", time: 800 },
-          { type: "walk", direction: "up" },
-          { type: "walk", direction: "right" },
-          { type: "walk", direction: "down" },
-        ],
         talking: [
           {
             events: [
