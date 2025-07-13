@@ -1,4 +1,4 @@
-import { Overworld } from "./Overworld.js";
+import { Overworld } from "./src/js/World/Overworld.js";
 
 (function () {
   const overworld = new Overworld(document.querySelector('.game-container'));

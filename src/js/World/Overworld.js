@@ -1,5 +1,5 @@
-import { DirectionInput } from "./DirectionInput.js";
-import { KeypressListener } from "./KeypressListener.js";
+import { DirectionInput } from "../Handlers/DirectionInput.js";
+import { KeypressListener } from "../Handlers/KeypressListener.js";
 import { OverworldMaps } from "./Maps.js";
 import { OverworldMap } from "./OverworldMap.js";
 
@@ -7,6 +7,7 @@ export class Overworld {
   constructor(config) {
     this.element = config;
     this.canvas = document.querySelector('.game-canvas');
+    this.canvas.addEventListener('contextmenu', event => event.preventDefault()); // right-click remover on canvas
     this.ctx = this.canvas.getContext('2d');
   }
 
@@ -87,7 +88,8 @@ export class Overworld {
     this.startGameLoop();
 
     this.map.startCutscene([
-      { type: "changeMap", map: "DemoRoom" },
+      { type: "battle" },
+      // { type: "changeMap", map: "DemoRoom" },
     ]);
   }
 }

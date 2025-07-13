@@ -1,7 +1,8 @@
 import { OverworldMaps } from "./Maps.js";
 import { SceneTransition } from "./SceneTransition.js";
-import { TextMessage } from "./TextMessage.js";
-import { utils } from "./utils.js";
+import { TextMessage } from "../UI/TextMessage.js";
+import { utils } from "../utils.js";
+import { Battle } from "../Battle/Battle.js";
 
 export class OverworldEvent {
   constructor({ map, event }) {
@@ -69,6 +70,15 @@ export class OverworldEvent {
 
       sceneTransition.fadeOut();
     });
+  }
+
+  battle(resolve) {
+    const battle = new Battle({
+      onComplete: () => {
+        resolve();
+      }
+    });
+    battle.init(document.querySelector('.game-container'));
   }
 
   init() {

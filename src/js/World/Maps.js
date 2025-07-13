@@ -1,5 +1,5 @@
-import { Person } from "./Person.js";
-import { utils } from "./utils.js";
+import { Person } from "../Objects/Person.js";
+import { utils } from "../utils.js";
 
 const x = utils.withGrid(5);
 const y = utils.withGrid(5);

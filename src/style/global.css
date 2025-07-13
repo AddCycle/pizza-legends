@@ -29,6 +29,10 @@ body {
   cursor: url('../assets/pointers/cursor1.png'), auto;
 }
 
+.game-container:hover {
+  outline: 1px solid lightblue;
+}
+
 .game-container canvas {
   image-rendering: pixelated;
 }

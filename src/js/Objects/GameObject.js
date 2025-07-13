@@ -1,5 +1,5 @@
-import { OverworldEvent } from "./OverworldEvent.js";
-import { Sprite } from "./Sprite.js";
+import { OverworldEvent } from "../World/OverworldEvent.js";
+import { Sprite } from "../Objects/Sprite.js";
 
 export class GameObject {
   constructor(config) {
