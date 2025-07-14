@@ -7,16 +7,7 @@ export class Overworld {
   constructor(config) {
     this.element = config;
     this.canvas = document.querySelector('.game-canvas');
-    this.canvas.addEventListener('contextmenu', event => event.preventDefault()); // right-click remover on canvas
-    // window.addEventListener('dblclick', event => {
-    //   if (event.detail > 1) event.preventDefault();
-    // }); // dbl-click remover on canvas
-    // window.addEventListener('mousedown', event => {
-    //   if (event.detail > 1) event.preventDefault();
-    // }); // dbl-click remover on canvas
-    // window.addEventListener('mousemove', event => {
-    //   if (event.detail > 1) event.preventDefault();
-    // }); // dbl-click remover on canvas
+    window.addEventListener('contextmenu', event => event.preventDefault()); // right-click remover on canvas
     this.ctx = this.canvas.getContext('2d');
   }
 

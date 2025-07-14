@@ -48,10 +48,10 @@ export class Battle {
     this.element.classList.add('Battle');
     this.element.innerHTML = (`
       <div class="Battle_hero">
-        <img src="${'../../src/assets/characters/people/hero.png'}" alt="Hero" />
+        <img src="${'./src/assets/characters/people/hero.png'}" alt="Hero" />
       </div>
       <div class="Battle_enemy">
-        <img src="${'../../src/assets/characters/people/npc3.png'}" alt="Enemy" />
+        <img src="${'./src/assets/characters/people/npc3.png'}" alt="Enemy" />
       </div>
       `);
   }
