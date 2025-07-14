@@ -1,5 +1,7 @@
 import { Combatant } from "./Combatant.js";
 import { Pizzas, PizzaTypes } from "../Data/pizzas.js";
+import { TurnCycle } from "./TurnCycle.js";
+import { BattleEvent } from "./BattleEvent.js";
 
 export class Battle {
   constructor() {
@@ -63,5 +65,16 @@ export class Battle {
       combatant.id = key;
       combatant.init(this.element);
     });
+
+    this.turnCycle = new TurnCycle({
+      battle: this,
+      onNewEvent: event => {
+        return new Promise(resolve => {
+          const battleEvent = new BattleEvent(event, this);
+          battleEvent.init(resolve);
+        });
+      }
+    });
+    this.turnCycle.init();
   }
 }
