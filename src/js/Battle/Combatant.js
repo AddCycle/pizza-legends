@@ -1,3 +1,5 @@
+import { utils } from "../utils.js";
+
 export class Combatant {
   constructor(config, battle) {
     Object.keys(config).forEach(key => {
@@ -65,6 +67,50 @@ export class Combatant {
 
     this.hudElement.querySelector('.Combatant_level').innerText = this.level;
 
+    const statusElement = this.hudElement.querySelector('.Combatant_status');
+    if (this.status) {
+      statusElement.innerText = this.status.type;
+      statusElement.style.display = "block";
+    } else {
+      statusElement.innerText = "";
+      statusElement.style.display = "none";
+    }
+  }
+
+  getReplacedEvents(originalEvents) {
+    if (this.status?.type === "clumsy" && utils.randomFromArray([true, false, false])) {
+      return [
+        { type: "textMessage", text: `${this.name} flops over!` },
+      ]
+    }
+    return originalEvents;
+  }
+
+  getPostEvents() {
+    if (this.status?.type === "saucy") {
+      return [
+        { type: "textMessage", text: "Feelin' saucy" },
+        { type: "stateChange", recover: 5, onCaster: true },
+      ];
+    }
+    return [];
+  }
+
+  decrementStatus() {
+    if (this.status?.expiresIn > 0) {
+      this.status.expiresIn--;
+      if (this.status.expiresIn === 0) {
+        const status = this.status.type;
+        this.update({
+          status: null
+        });
+        return {
+          type: "textMessage",
+          text: `${this.name} is no more ${status}...`,
+        }
+      }
+    }
+    return null;
   }
 
   init(container) {

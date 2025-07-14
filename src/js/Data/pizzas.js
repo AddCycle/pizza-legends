@@ -12,7 +12,7 @@ export const Pizzas = Object.freeze({
     type: PizzaTypes.spicy,
     src: "./src/assets/characters/pizzas/s001.png",
     icon: "./src/assets/icons/spicy.png",
-    actions: ["damage1"],
+    actions: ["clumsyStatus", "damage1"],
   },
   "v001": {
     name: "Call Me Kale",

@@ -18,10 +18,10 @@ export class TurnCycle {
       enemy
     });
 
-    const resultingEvent = submission.action.success;
-    for (let i = 0; i < resultingEvent.length; i++) {
+    const resultingEvents = caster.getReplacedEvents(submission.action.success);;
+    for (let i = 0; i < resultingEvents.length; i++) {
       const event = {
-        ...resultingEvent[i],
+        ...resultingEvents[i],
         submission,
         action: submission.action,
         caster,
@@ -29,6 +29,26 @@ export class TurnCycle {
       };
       await this.onNewEvent(event);
     }
+
+    // check for post events
+    const postEvents = caster.getPostEvents();
+    for (let i = 0; i < postEvents.length; i++) {
+      const event = {
+        ...postEvents[i],
+        submission,
+        action: submission.action,
+        caster,
+        target: submission.target,
+      };
+      await this.onNewEvent(event);
+    }
+
+    // checks for expired status
+    const expiredEvent = caster.decrementStatus();
+    if (expiredEvent) {
+      await this.onNewEvent(expiredEvent);
+    }
+
     this.currentTeam = this.currentTeam === "player" ? "enemy" : "player";
 
     // start over

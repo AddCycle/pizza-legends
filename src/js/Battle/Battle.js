@@ -15,6 +15,9 @@ export class Battle {
         maxXp: 100,
         level: 1,
         status: null,
+        // status: {
+        //   type: "clumsy",
+        // },
       }, this),
       "enemy1": new Combatant({
         ...Pizzas.v001,
