@@ -23,7 +23,7 @@ export class TextMessage {
     });
 
     this.element.querySelector('button').addEventListener('click', () => this.done());
-    this.actionListener = new KeypressListener(() => this.done() && this.actionListener.unbind(), 'Space', 'Enter');
+    this.actionListener = new KeypressListener(['Space', 'Enter'], () => this.done() && this.actionListener.unbind());
   }
 
   init(container) {

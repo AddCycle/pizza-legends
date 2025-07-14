@@ -1,0 +1,59 @@
+.KeyboardMenu {
+  border: 1px solid var(--border-color);
+  background-color: var(--menu-background);
+  position: absolute;
+}
+
+.KeyboardMenu button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  /* -webkit-appearance: none; */
+  border: 0;
+  background: none;
+  height: 20px;
+  /* TODO -> make a custom cursor*/
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0;
+  padding-left: 1em;
+  font-size: 10px;
+}
+
+.KeyboardMenu button:focus {
+  background-color: var(--menu-selected-background);
+  outline: 0;
+}
+
+.KeyboardMenu .option {
+  position: relative;
+}
+
+.KeyboardMenu .option .right {
+  position: absolute;
+  inset: 0;
+  left: inherit;
+}
+
+.DescriptionBox {
+  position: absolute;
+  inset: 0;
+  top: auto;
+  color: var(--menu-font-color);
+  border-top: 1px solid var(--border-color);
+  background-color: var(--menu-background);
+  padding: 2px;
+}
+
+.DescriptionBox p {
+  font-size: 10px;
+  margin: 0;
+}
+
+/* Battle specific */
+.Battle .KeyboardMenu {
+  right: 0;
+  bottom: 0;
+  width: 140px;
+}

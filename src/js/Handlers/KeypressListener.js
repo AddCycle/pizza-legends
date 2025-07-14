@@ -1,9 +1,9 @@
 export class KeypressListener {
-  constructor(callback, ...keyCodes) {
+  constructor(keyCodes, callback) {
     let keySafe = true;
     this.keydownFunction = function (event) {
-      for (const key of keyCodes) {
-        if (event.code === key && keySafe) {
+      for (const key in keyCodes) {
+        if (event.code === keyCodes[key] && keySafe) {
           keySafe = false;
           callback();
           break;
@@ -12,8 +12,8 @@ export class KeypressListener {
     };
 
     this.keyupFunction = function (event) {
-      for (const key of keyCodes) {
-        if (event.code === key) {
+      for (const key in keyCodes) {
+        if (event.code === keyCodes[key]) {
           keySafe = true;
           break;
         }
