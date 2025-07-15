@@ -120,6 +120,30 @@ export class BattleEvent {
     resolve();
   }
 
+  giveXp(resolve) {
+    let amount = this.event.xp;
+    const { combatant } = this.event;
+    const step = () => {
+      if (amount > 0) {
+        amount--;
+        combatant.xp++;
+
+        // check if we've hit level up point
+        if (combatant.xp === combatant.maxXp) {
+          combatant.xp = 0;
+          combatant.maxXp = 100;
+          combatant.level++;
+        }
+
+        combatant.update();
+        requestAnimationFrame(step);
+        return;
+      }
+      resolve();
+    }
+    requestAnimationFrame(step);
+  }
+
   animation(resolve) {
     const ft = BattleAnimations[this.event.animation];
     ft(this.event, resolve);

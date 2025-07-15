@@ -3,6 +3,7 @@ import { SceneTransition } from "./SceneTransition.js";
 import { TextMessage } from "../UI/TextMessage.js";
 import { utils } from "../utils.js";
 import { Battle } from "../Battle/Battle.js";
+import { Enemies } from "../Data/enemies.js";
 
 export class OverworldEvent {
   constructor({ map, event }) {
@@ -73,7 +74,11 @@ export class OverworldEvent {
   }
 
   battle(resolve) {
+    console.log(this.event);
+    console.log(this.event.enemyId);
+    console.log(Enemies[this.event.enemyId]);
     const battle = new Battle({
+      enemy: Enemies[this.event.enemyId],
       onComplete: () => {
         resolve();
       }

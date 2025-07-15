@@ -55,9 +55,9 @@ export class Overworld {
   }
 
   bindActionInput() {
-    new KeypressListener(() => {
+    new KeypressListener(['Enter', 'Space'], () => {
       this.map.checkForActionCutscene();
-    }, 'Enter', 'Space');
+    });
   }
 
   bindHeroPositionCheck() {
@@ -87,9 +87,9 @@ export class Overworld {
 
     this.startGameLoop();
 
-    this.map.startCutscene([
-      { type: "battle" },
-      // { type: "changeMap", map: "DemoRoom" },
-    ]);
+    // this.map.startCutscene([
+    //   { type: "battle", enemyId: "beth" },
+    //   // { type: "changeMap", map: "DemoRoom" },
+    // ]);
   }
 }

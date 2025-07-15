@@ -21,21 +21,30 @@ export const OverworldMaps = {
         talking: [
           {
             events: [
-              { type: "textMessage", text: "HELLO THERE GUY!", faceHero: "npcA" },
-              { type: "textMessage", text: "I'm busy..." },
-              { who: "hero", type: "walk", direction: "up" }
+              // { type: "textMessage", text: "HELLO THERE GUY!", faceHero: "npcA" },
+              { type: "textMessage", text: "I'm busy...", faceHero: "npcA" },
+              { type: "battle", enemyId: "beth" },
+              // { who: "hero", type: "walk", direction: "up" }
             ]
           }
         ]
       }),
       npcB: new Person({
-        x: utils.withGrid(8), y: utils.withGrid(5), src: "./src/assets/characters/people/npc2.png",
+        x: utils.withGrid(8), y: utils.withGrid(5), src: "./src/assets/characters/people/erio.png",
         behaviourLoop: [
           { type: "stand", direction: "up", time: 800 },
           { type: "stand", direction: "up", time: 300 },
           { type: "stand", direction: "right", time: 1200 },
           { type: "stand", direction: "down", time: 600 },
         ],
+        talking: [
+          {
+            events: [
+              { type: "textMessage", text: "Bahaha!", faceHero: "npcB" },
+              { type: "battle", enemyId: "erio" },
+            ]
+          }
+        ]
       }),
     },
     walls: {
