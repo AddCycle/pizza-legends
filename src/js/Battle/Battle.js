@@ -117,7 +117,7 @@ export class Battle {
           });
 
           // Send signal to update Hud/playerState
-          utils.emitEvent("PlayerStateUpdated", { detail: winner === "player" });
+          utils.emitEvent("PlayerStateUpdated");
         }
 
         const sceneTransition = new SceneTransition();
@@ -127,7 +127,7 @@ export class Battle {
           sceneTransition.fadeOut();
         });
         await utils.wait(1200); // duration of the transition effect
-        this.onComplete();
+        this.onComplete(winner === "player");
       }
     });
     this.turnCycle.init();

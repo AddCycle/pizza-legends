@@ -31,12 +31,14 @@ export class PlayerState {
         status: null,
       }
     };
-    this.lineup = ["p1", "p2"];
+    this.lineup = ["p1"];
     this.items = [
       { actionId: "item_recoverHp", instanceId: "item1" },
       { actionId: "item_recoverStatus", instanceId: "item2" },
       { actionId: "item_recoverStatus", instanceId: "item3" },
     ];
+
+    this.storyFlags = {};
   }
 
   swapLineup(oldId, incomingId) {

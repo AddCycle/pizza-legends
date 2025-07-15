@@ -1,5 +1,6 @@
 import { OverworldEvent } from "./OverworldEvent.js";
 import { utils } from '../utils.js';
+import { playerState } from "../State/PlayerState.js";
 
 export class OverworldMap {
   constructor(config) {
@@ -48,7 +49,11 @@ export class OverworldMap {
         map: this,
         event: events[i]
       });
-      await eventHandler.init();
+      const result = await eventHandler.init();
+      if (result === "LOST_BATTLE") {
+        // playerState.storyFlags["LOST_BATTLE"] = true;
+        break;
+      }
     }
 
     this.isCutscenePlaying = false;
@@ -64,7 +69,13 @@ export class OverworldMap {
       return `${object.x}x${object.y}` === `${nextCoords.x}x${nextCoords.y}`;
     });
     if (!this.isCutscenePlaying && match && match.talking.length) {
-      this.startCutscene(match.talking[0].events);
+
+      const relevantScenario = match.talking.find(scenario => {
+        return (scenario.required || []).every(sf => {
+          return playerState.storyFlags[sf];
+        })
+      });
+      relevantScenario && this.startCutscene(relevantScenario.events);
     }
   }
 

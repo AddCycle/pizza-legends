@@ -5,6 +5,7 @@ import { utils } from "../utils.js";
 import { Battle } from "../Battle/Battle.js";
 import { Enemies } from "../Data/enemies.js";
 import { PauseMenu } from "../UI/PauseMenu.js";
+import { playerState } from "../State/PlayerState.js";
 
 export class OverworldEvent {
   constructor({ map, event }) {
@@ -58,7 +59,7 @@ export class OverworldEvent {
       obj.direction = utils.oppositeDirection(this.map.gameObjects['hero'].direction);
     }
     const message = new TextMessage({
-      text: typeof this.event.text === "function" ? this.event.text() : this.event.text,
+      text: this.event.text,
       onComplete: () => resolve(),
     });
     message.init(document.querySelector('.game-container'));
@@ -81,8 +82,8 @@ export class OverworldEvent {
   battle(resolve) {
     const battle = new Battle({
       enemy: Enemies[this.event.enemyId],
-      onComplete: () => {
-        resolve();
+      onComplete: (didWin) => {
+        resolve(didWin ? "WON_BATTLE" : "LOST_BATTLE");
       }
     });
     this.transition(() => battle.init(document.querySelector('.game-container')), () => null);
@@ -98,6 +99,11 @@ export class OverworldEvent {
       }
     });
     menu.init(document.querySelector('.game-container'));
+  }
+
+  addStoryFlag(resolve) {
+    playerState.storyFlags[this.event.flag] = true;
+    resolve();
   }
 
   init() {
