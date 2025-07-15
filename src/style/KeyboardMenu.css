@@ -34,6 +34,10 @@
   position: absolute;
   inset: 0;
   left: inherit;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  padding-right: 3px;
 }
 
 .DescriptionBox {
