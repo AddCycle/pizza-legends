@@ -22,6 +22,7 @@ export const Enemies = {
       "a": {
         pizzaId: "f001",
         maxHp: 50,
+        hp: 1,
         level: 1,
       },
     }

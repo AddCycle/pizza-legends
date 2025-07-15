@@ -1,5 +1,6 @@
 import { DirectionInput } from "../Handlers/DirectionInput.js";
 import { KeypressListener } from "../Handlers/KeypressListener.js";
+import { Hud } from "../UI/Hud.js";
 import { OverworldMaps } from "./Maps.js";
 import { OverworldMap } from "./OverworldMap.js";
 
@@ -64,7 +65,6 @@ export class Overworld {
     document.addEventListener("PersonWalkingComplete", e => {
       if (e.detail.whoId === "hero") {
         // Hero's position changed
-        console.log("NEW HERO POS");
         this.map.checkForFootstepCutscene();
       }
     });
@@ -77,6 +77,9 @@ export class Overworld {
   }
 
   init() {
+
+    this.hud = new Hud();
+    this.hud.init(document.querySelector('.game-container'));
     this.startMap(OverworldMaps.Kitchen);
 
     this.bindActionInput();

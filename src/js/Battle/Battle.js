@@ -111,9 +111,13 @@ export class Battle {
             }
           });
 
+          // get rid of the players used items
           playerState.items = playerState.items.filter(item => {
             return !this.usedInstanceIds[item.instanceId];
-          })
+          });
+
+          // Send signal to update Hud/playerState
+          utils.emitEvent("PlayerStateUpdated", { detail: winner === "player" });
         }
 
         const sceneTransition = new SceneTransition();
