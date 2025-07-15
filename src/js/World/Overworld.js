@@ -89,7 +89,7 @@ export class Overworld {
 
     this.hud = new Hud();
     this.hud.init(document.querySelector('.game-container'));
-    this.startMap(OverworldMaps.Kitchen);
+    this.startMap(OverworldMaps.DemoRoom);
 
     this.bindActionInput();
     this.bindHeroPositionCheck();

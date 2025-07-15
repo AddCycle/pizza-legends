@@ -6,6 +6,7 @@ import { Battle } from "../Battle/Battle.js";
 import { Enemies } from "../Data/enemies.js";
 import { PauseMenu } from "../UI/PauseMenu.js";
 import { playerState } from "../State/PlayerState.js";
+import { CraftingMenu } from "../UI/CraftingMenu.js";
 
 export class OverworldEvent {
   constructor({ map, event }) {
@@ -104,6 +105,16 @@ export class OverworldEvent {
   addStoryFlag(resolve) {
     playerState.storyFlags[this.event.flag] = true;
     resolve();
+  }
+
+  craftingMenu(resolve) {
+    const menu = new CraftingMenu({
+      pizzas: this.event.pizzas,
+      onComplete: () => {
+        resolve();
+      }
+    });
+    menu.init(document.querySelector('.game-container'));
   }
 
   init() {

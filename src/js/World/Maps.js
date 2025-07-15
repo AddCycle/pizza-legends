@@ -1,4 +1,5 @@
 import { Person } from "../Objects/Person.js";
+import { PizzaStone } from "../Objects/PizzaStone.js";
 import { utils } from "../utils.js";
 
 const x = utils.withGrid(5);
@@ -58,6 +59,12 @@ export const OverworldMaps = {
             ]
           }
         ]
+      }),
+      pizzaStone: new PizzaStone({
+        x: utils.withGrid(2),
+        y: utils.withGrid(7),
+        storyFlag: "USED_PIZZA_STONE",
+        pizzas: ["v001", "f001"]
       }),
     },
     walls: {

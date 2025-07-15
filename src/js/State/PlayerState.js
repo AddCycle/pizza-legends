@@ -41,6 +41,26 @@ export class PlayerState {
     this.storyFlags = {};
   }
 
+  addPizza(pizzaId) {
+    const newId = `p${Date.now()}` + Math.floor(Math.random() * 99999);
+    this.pizzas[newId] = {
+      pizzaId,
+      hp: 50,
+      maxHp: 50,
+      xp: 0,
+      maxHp: 100,
+      level: 1,
+      status: null
+    };
+
+    // TODO : change the max pizzas of the player in the lineup
+    if (this.lineup.length < 3) {
+      this.lineup.push(newId);
+    }
+    utils.emitEvent('LineupChanged');
+    console.log(this);
+  }
+
   swapLineup(oldId, incomingId) {
     const oldIndex = this.lineup.indexOf(oldId);
     this.lineup[oldIndex] = incomingId;
