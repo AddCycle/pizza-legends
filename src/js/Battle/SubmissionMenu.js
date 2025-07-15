@@ -2,9 +2,10 @@ import { Actions } from '../Data/actions.js';
 import { KeyboardMenu } from '../UI/KeyboardMenu.js';
 
 export class SubmissionMenu {
-  constructor({ caster, enemy, onComplete, items }) {
+  constructor({ caster, enemy, onComplete, items, replacements }) {
     this.caster = caster;
     this.enemy = enemy;
+    this.replacements = replacements;
     this.onComplete = onComplete;
 
     let quantityMap = {};
@@ -57,7 +58,7 @@ export class SubmissionMenu {
           description: "Switch to another pizza",
           handler: () => {
             // see pizza options
-            this.keyboardMenu.setOptions(this.getPages().swap);
+            this.keyboardMenu.setOptions(this.getPages().replacements);
           }
         }
       ],
@@ -90,10 +91,27 @@ export class SubmissionMenu {
         }),
         backOption
       ],
-      swap: [
+      replacements: [
+        ...this.replacements.map(replacement => {
+          return {
+            label: replacement.name,
+            description: replacement.description,
+            handler: () => {
+              // swaps the pizza
+              this.menuSubmitReplacement(replacement);
+            }
+          }
+        }),
         backOption
       ]
     }
+  }
+
+  menuSubmitReplacement(replacement) {
+    this.keyboardMenu?.end();
+    this.onComplete({
+      replacement
+    });
   }
 
   menuSubmit(action, instanceId = null) {

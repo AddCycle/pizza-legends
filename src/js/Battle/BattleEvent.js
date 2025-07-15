@@ -1,6 +1,7 @@
 import { TextMessage } from '../UI/TextMessage.js';
 import { utils } from '../utils.js';
 import { BattleAnimations } from './BattleAnimations.js';
+import { ReplacementMenu } from './ReplacementMenu.js';
 import { SubmissionMenu } from './SubmissionMenu.js';
 
 export class BattleEvent {
@@ -68,15 +69,48 @@ export class BattleEvent {
   }
 
   submissionMenu(resolve) {
+    const { caster } = this.event;
     const menu = new SubmissionMenu({
-      caster: this.event.caster,
+      caster,
       enemy: this.event.enemy,
       items: this.battle.items,
+      replacements: Object.values(this.battle.combatants).filter(c => {
+        return c.id !== caster.id && c.team === caster.team && c.hp > 0;
+      }),
       onComplete: submission => {
         resolve(submission);
       }
     });
     menu.init(this.battle.element);
+  }
+
+  replacementMenu(resolve) {
+    const menu = new ReplacementMenu({
+      replacements: Object.values(this.battle.combatants).filter(c => {
+        return c.team === this.event.team && c.hp > 0;
+      }),
+      onComplete: replacement => {
+        resolve(replacement);
+      }
+    });
+    menu.init(this.battle.element);
+  }
+
+  async replace(resolve) {
+    const { replacement } = this.event;
+
+    // clear out the old combatant
+    const prevCombatant = this.battle.combatants[this.battle.activeCombatants[replacement.team]];
+    this.battle.activeCombatants[replacement.team] = null;
+    prevCombatant.update();
+    await utils.wait(400);
+
+    // In with the new one
+    this.battle.activeCombatants[replacement.team] = replacement.id;
+    replacement.update();
+    await utils.wait(400);
+
+    resolve();
   }
 
   animation(resolve) {
