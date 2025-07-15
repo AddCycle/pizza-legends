@@ -1,3 +1,5 @@
+import { utils } from "../utils.js";
+
 export class PlayerState {
   constructor() {
     this.pizzas = {
@@ -18,6 +20,15 @@ export class PlayerState {
         maxXp: 100,
         level: 1,
         status: null,
+      },
+      "p3": {
+        pizzaId: "f001",
+        hp: 1,
+        maxHp: 70,
+        xp: 75,
+        maxXp: 100,
+        level: 2,
+        status: null,
       }
     };
     this.lineup = ["p1", "p2"];
@@ -26,6 +37,19 @@ export class PlayerState {
       { actionId: "item_recoverStatus", instanceId: "item2" },
       { actionId: "item_recoverStatus", instanceId: "item3" },
     ];
+  }
+
+  swapLineup(oldId, incomingId) {
+    const oldIndex = this.lineup.indexOf(oldId);
+    this.lineup[oldIndex] = incomingId;
+    utils.emitEvent('LineupChanged');
+  }
+
+  moveToFront(futureFrontId) {
+    this.lineup = this.lineup.filter(id => id !== futureFrontId);
+    this.lineup.unshift(futureFrontId);
+
+    utils.emitEvent('LineupChanged');
   }
 }
 

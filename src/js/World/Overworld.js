@@ -50,7 +50,9 @@ export class Overworld {
       }
       previous = timestamp - delta * 1000;
 
-      requestAnimationFrame(step);
+      if (!this.map.isPaused) {
+        requestAnimationFrame(step);
+      }
     }
     requestAnimationFrame(step);
   }
@@ -58,6 +60,13 @@ export class Overworld {
   bindActionInput() {
     new KeypressListener(['Enter', 'Space'], () => {
       this.map.checkForActionCutscene();
+    });
+    new KeypressListener(['Escape'], () => {
+      if (!this.map.isCutscenePlaying) {
+        this.map.startCutscene([
+          { type: "pause" }
+        ])
+      }
     });
   }
 

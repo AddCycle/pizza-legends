@@ -3,11 +3,11 @@ import { utils } from "../utils.js";
 
 const x = utils.withGrid(5);
 const y = utils.withGrid(5);
-// let playerHasWon = true;
-// document.addEventListener('PlayerStateUpdated', e => {
-//   console.log(e.detail)
-//   playerHasWon = e.detail;
-// });
+let playerHasWon;
+document.addEventListener('PlayerStateUpdated', e => {
+  console.log(e.detail)
+  playerHasWon = e.detail;
+});
 
 export var OverworldMaps = {
   DemoRoom: {
@@ -28,8 +28,7 @@ export var OverworldMaps = {
             events: [
               { type: "textMessage", text: "I'm busy...", faceHero: "npcA" },
               { type: "battle", enemyId: "beth" },
-              { type: "textMessage", text: `If you have won, good on you, if not, train yourself and come back!`, faceHero: "npcA" },
-              // { type: "textMessage", text: (playerHasWon ? "You're strong buddy" : "You are weak miskine!!!"), faceHero: "npcA" },
+              { type: "textMessage", text: () => playerHasWon ? "You're strong buddy" : "You are weak miskine!!!", faceHero: "npcA" },
             ]
           }
         ]

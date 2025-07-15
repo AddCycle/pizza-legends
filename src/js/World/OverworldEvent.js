@@ -4,6 +4,7 @@ import { TextMessage } from "../UI/TextMessage.js";
 import { utils } from "../utils.js";
 import { Battle } from "../Battle/Battle.js";
 import { Enemies } from "../Data/enemies.js";
+import { PauseMenu } from "../UI/PauseMenu.js";
 
 export class OverworldEvent {
   constructor({ map, event }) {
@@ -57,7 +58,7 @@ export class OverworldEvent {
       obj.direction = utils.oppositeDirection(this.map.gameObjects['hero'].direction);
     }
     const message = new TextMessage({
-      text: this.event.text,
+      text: typeof this.event.text === "function" ? this.event.text() : this.event.text,
       onComplete: () => resolve(),
     });
     message.init(document.querySelector('.game-container'));
@@ -85,6 +86,18 @@ export class OverworldEvent {
       }
     });
     this.transition(() => battle.init(document.querySelector('.game-container')), () => null);
+  }
+
+  pause(resolve) {
+    this.map.isPaused = true;
+    const menu = new PauseMenu({
+      onComplete: () => {
+        resolve();
+        this.map.isPaused = false;
+        this.map.overworld.startGameLoop();
+      }
+    });
+    menu.init(document.querySelector('.game-container'));
   }
 
   init() {
