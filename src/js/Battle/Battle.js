@@ -2,6 +2,7 @@ import { Combatant } from "./Combatant.js";
 import { Pizzas, PizzaTypes } from "../Data/pizzas.js";
 import { TurnCycle } from "./TurnCycle.js";
 import { BattleEvent } from "./BattleEvent.js";
+import { Team } from "./Team.js";
 
 export class Battle {
   constructor() {
@@ -78,11 +79,24 @@ export class Battle {
     this.createElement();
     container.appendChild(this.element);
 
+    this.playerTeam = new Team("player", "Hero");
+    this.enemyTeam = new Team("enemy", "Bully Maguire");
+
     Object.keys(this.combatants).forEach(key => {
       let combatant = this.combatants[key];
       combatant.id = key;
       combatant.init(this.element);
+
+      // Add to correct team
+      if (combatant.team === "player") {
+        this.playerTeam.combatants.push(combatant);
+      } else if (combatant.team === "enemy") {
+        this.enemyTeam.combatants.push(combatant);
+      }
     });
+
+    this.playerTeam.init(this.element);
+    this.enemyTeam.init(this.element);
 
     this.turnCycle = new TurnCycle({
       battle: this,
