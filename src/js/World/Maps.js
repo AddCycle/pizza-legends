@@ -21,10 +21,9 @@ export const OverworldMaps = {
         talking: [
           {
             events: [
-              // { type: "textMessage", text: "HELLO THERE GUY!", faceHero: "npcA" },
               { type: "textMessage", text: "I'm busy...", faceHero: "npcA" },
               { type: "battle", enemyId: "beth" },
-              // { who: "hero", type: "walk", direction: "up" }
+              { type: "textMessage", text: "If you have won, good on you, if not, train yourself and come back!", faceHero: "npcA" },
             ]
           }
         ]

@@ -9,7 +9,6 @@ export class SceneTransition {
   }
 
   fadeOut() {
-    console.log('fading')
     this.element.classList.add('fade-out');
     this.element.addEventListener('animationend', () => {
       this.element.remove();

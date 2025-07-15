@@ -64,9 +64,13 @@ export class OverworldEvent {
   }
 
   changeMap(resolve) {
+    this.transition(() => this.map.overworld.startMap(OverworldMaps[this.event.map]), resolve);
+  }
+
+  transition(callback, resolve) {
     const sceneTransition = new SceneTransition();
     sceneTransition.init(document.querySelector('.game-container'), () => {
-      this.map.overworld.startMap(OverworldMaps[this.event.map]);
+      callback();
       resolve();
 
       sceneTransition.fadeOut();
@@ -74,16 +78,13 @@ export class OverworldEvent {
   }
 
   battle(resolve) {
-    console.log(this.event);
-    console.log(this.event.enemyId);
-    console.log(Enemies[this.event.enemyId]);
     const battle = new Battle({
       enemy: Enemies[this.event.enemyId],
       onComplete: () => {
         resolve();
       }
     });
-    battle.init(document.querySelector('.game-container'));
+    this.transition(() => battle.init(document.querySelector('.game-container')), () => null);
   }
 
   init() {

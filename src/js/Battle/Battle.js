@@ -5,6 +5,8 @@ import { BattleEvent } from "./BattleEvent.js";
 import { Team } from "./Team.js";
 import { playerState } from "../State/PlayerState.js";
 import { Enemies } from "../Data/enemies.js";
+import { SceneTransition } from "../World/SceneTransition.js";
+import { utils } from "../utils.js";
 
 export class Battle {
   constructor({ enemy, onComplete }) {
@@ -12,53 +14,10 @@ export class Battle {
     console.log(this.enemy);
     this.onComplete = onComplete;
 
-    this.combatants = {
-      // "player1": new Combatant({
-      //   ...Pizzas.s001,
-      //   team: "player", // other is enemies
-      //   hp: 30,
-      //   maxHp: 50,
-      //   xp: 95,
-      //   maxXp: 100,
-      //   level: 1,
-      //   status: { type: "saucy" },
-      //   isPlayerControlled: true,
-      // }, this),
-      // "player2": new Combatant({
-      //   ...Pizzas.s002,
-      //   team: "player",
-      //   hp: 30,
-      //   maxHp: 50,
-      //   xp: 75,
-      //   maxXp: 100,
-      //   level: 1,
-      //   status: null,
-      //   isPlayerControlled: true,
-      // }, this),
-      // "enemy1": new Combatant({
-      //   ...Pizzas.v001,
-      //   team: "enemy",
-      //   hp: 1,
-      //   maxHp: 50,
-      //   xp: 20,
-      //   maxXp: 100,
-      //   level: 1,
-      //   status: null,
-      // }, this),
-      // "enemy2": new Combatant({
-      //   ...Pizzas.f001,
-      //   team: "enemy",
-      //   hp: 25,
-      //   maxHp: 50,
-      //   xp: 30,
-      //   maxXp: 100,
-      //   level: 1,
-      //   status: null,
-      // }, this),
-    };
+    this.combatants = {};
     this.activeCombatants = {
-      player: null, // "player1",
-      enemy: null, // "enemy1",
+      player: null,
+      enemy: null,
     };
 
     // dynamically add the player's combatants
@@ -139,8 +98,7 @@ export class Battle {
           battleEvent.init(resolve);
         });
       },
-      onWinner: winner => {
-
+      onWinner: async (winner) => {
         if (winner === "player") {
           Object.keys(playerState.pizzas).forEach(id => {
             const playerStatePizza = playerState.pizzas[id];
@@ -158,7 +116,13 @@ export class Battle {
           })
         }
 
-        this.element.remove();
+        const sceneTransition = new SceneTransition();
+        sceneTransition.init(document.querySelector('.game-container'), () => {
+          this.element.remove();
+
+          sceneTransition.fadeOut();
+        });
+        await utils.wait(1200); // duration of the transition effect
         this.onComplete();
       }
     });
