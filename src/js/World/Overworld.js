@@ -2,6 +2,7 @@ import { DirectionInput } from "../Handlers/DirectionInput.js";
 import { KeypressListener } from "../Handlers/KeypressListener.js";
 import { Progress } from "../State/Progress.js";
 import { Hud } from "../UI/Hud.js";
+import { TitleScreen } from "../UI/TitleScreen.js";
 import { OverworldMaps } from "./Maps.js";
 import { OverworldMap } from "./OverworldMap.js";
 
@@ -110,15 +111,21 @@ export class Overworld {
     this.progress.startingHeroDirection = this.map.gameObjects.hero.direction;
   }
 
-  init() {
+  async init() {
+    const container = document.querySelector('.game-container');
 
     // creates a new tracker
     this.progress = new Progress();
 
+    // show the title screen
+    this.titleScreen = new TitleScreen({
+      progress: this.progress,
+    });
+    const useSaveFile = await this.titleScreen.init(container);
+
     // potentially load saved data
     let initialHeroState = null;
-    const saveFile = this.progress.getSaveFile();
-    if (saveFile) {
+    if (useSaveFile) {
       this.progress.load();
       initialHeroState = {
         x: this.progress.startingHeroX,
