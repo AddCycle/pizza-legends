@@ -1,5 +1,6 @@
 import { DirectionInput } from "../Handlers/DirectionInput.js";
 import { KeypressListener } from "../Handlers/KeypressListener.js";
+import { Progress } from "../State/Progress.js";
 import { Hud } from "../UI/Hud.js";
 import { OverworldMaps } from "./Maps.js";
 import { OverworldMap } from "./OverworldMap.js";
@@ -8,7 +9,6 @@ export class Overworld {
   constructor(config) {
     this.element = config;
     this.canvas = document.querySelector('.game-canvas');
-    window.addEventListener('contextmenu', event => event.preventDefault()); // right-click remover on canvas
     this.ctx = this.canvas.getContext('2d');
   }
 
@@ -58,16 +58,27 @@ export class Overworld {
   }
 
   bindActionInput() {
+    window.addEventListener('contextmenu', event => {
+      if (event.button === 2) {
+        console.log("PAUSING");
+        this.pauseGame();
+      }
+      event.preventDefault();
+    }); // right-click remover on window
     new KeypressListener(['Enter', 'Space'], () => {
       this.map.checkForActionCutscene();
     });
     new KeypressListener(['Escape'], () => {
-      if (!this.map.isCutscenePlaying) {
-        this.map.startCutscene([
-          { type: "pause" }
-        ])
-      }
+      this.pauseGame();
     });
+  }
+
+  pauseGame() {
+    if (!this.map.isCutscenePlaying) {
+      this.map.startCutscene([
+        { type: "pause" }
+      ])
+    }
   }
 
   bindHeroPositionCheck() {
@@ -79,18 +90,51 @@ export class Overworld {
     });
   }
 
-  startMap(mapConfig) {
+  startMap(mapConfig, heroInitialState = null) {
     this.map = new OverworldMap(mapConfig);
     this.map.overworld = this;
     this.map.mountObjects();
+
+    if (heroInitialState) {
+      const { hero } = this.map.gameObjects;
+      this.map.removeWall(hero.x, hero.y);
+      hero.x = heroInitialState.x;
+      hero.y = heroInitialState.y;
+      hero.direction = heroInitialState.direction;
+      this.map.addWall(hero.x, hero.y);
+    }
+
+    this.progress.mapId = mapConfig.id;
+    this.progress.startingHeroX = this.map.gameObjects.hero.x;
+    this.progress.startingHeroY = this.map.gameObjects.hero.y;
+    this.progress.startingHeroDirection = this.map.gameObjects.hero.direction;
   }
 
   init() {
 
+    // creates a new tracker
+    this.progress = new Progress();
+
+    // potentially load saved data
+    let initialHeroState = null;
+    const saveFile = this.progress.getSaveFile();
+    if (saveFile) {
+      this.progress.load();
+      initialHeroState = {
+        x: this.progress.startingHeroX,
+        y: this.progress.startingHeroY,
+        direction: this.progress.startingHeroDirection,
+      }
+    }
+
+    // load the hud
     this.hud = new Hud();
     this.hud.init(document.querySelector('.game-container'));
-    this.startMap(OverworldMaps.DemoRoom);
 
+    // starts the map
+    this.startMap(OverworldMaps[this.progress.mapId], initialHeroState);
+
+    // controls
     this.bindActionInput();
     this.bindHeroPositionCheck();
 

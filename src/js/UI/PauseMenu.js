@@ -4,7 +4,8 @@ import { playerState } from "../State/PlayerState.js";
 import { KeyboardMenu } from "./KeyboardMenu.js";
 
 export class PauseMenu {
-  constructor({ onComplete }) {
+  constructor({ progress, onComplete }) {
+    this.progress = progress;
     this.onComplete = onComplete;
   }
 
@@ -28,7 +29,8 @@ export class PauseMenu {
           label: "Save",
           description: "Save your progress",
           handler: () => {
-            // we'll do this
+            this.progress.save();
+            this.close();
           }
         },
         {

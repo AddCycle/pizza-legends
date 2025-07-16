@@ -67,7 +67,11 @@ export class OverworldEvent {
   }
 
   changeMap(resolve) {
-    this.transition(() => this.map.overworld.startMap(OverworldMaps[this.event.map]), resolve);
+    this.transition(() => this.map.overworld.startMap(OverworldMaps[this.event.map], {
+      x: this.event.x,
+      y: this.event.y,
+      direction: this.event.direction,
+    }), resolve);
   }
 
   transition(callback, resolve) {
@@ -93,6 +97,7 @@ export class OverworldEvent {
   pause(resolve) {
     this.map.isPaused = true;
     const menu = new PauseMenu({
+      progress: this.map.overworld.progress,
       onComplete: () => {
         resolve();
         this.map.isPaused = false;

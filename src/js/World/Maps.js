@@ -7,6 +7,7 @@ const y = utils.withGrid(5);
 
 export const OverworldMaps = {
   DemoRoom: {
+    id: "DemoRoom",
     lowerSrc: './src/assets/maps/DemoLower.png',
     upperSrc: './src/assets/maps/DemoUpper.png',
     gameObjects: {
@@ -89,13 +90,20 @@ export const OverworldMaps = {
       [utils.asGridCoord(5, 10)]: [
         {
           events: [
-            { type: "changeMap", map: "Kitchen" },
+            {
+              type: "changeMap",
+              map: "Kitchen",
+              x: utils.withGrid(5),
+              y: utils.withGrid(10),
+              direction: "up"
+            },
           ]
         }
       ]
     }
   },
   Kitchen: {
+    id: "Kitchen",
     lowerSrc: './src/assets/maps/KitchenLower.png',
     upperSrc: './src/assets/maps/KitchenUpper.png',
     gameObjects: {
@@ -115,10 +123,39 @@ export const OverworldMaps = {
       [utils.asGridCoord(5, 10)]: [
         {
           events: [
-            { type: "changeMap", map: "DemoRoom" },
+            {
+              type: "changeMap",
+              map: "Street",
+              x: utils.withGrid(29),
+              y: utils.withGrid(9),
+              direction: "down"
+            },
           ]
         }
       ]
     }
   },
+  Street: {
+    id: "Street",
+    lowerSrc: './src/assets/maps/StreetLower.png',
+    upperSrc: './src/assets/maps/StreetUpper.png',
+    gameObjects: {
+      hero: new Person({ x: utils.withGrid(30), y: utils.withGrid(10), isPlayerControlled: true, direction: "down", }),
+    },
+    cutsceneSpaces: {
+      [utils.asGridCoord(29, 9)]: [
+        {
+          events: [
+            {
+              type: "changeMap",
+              map: "Kitchen",
+              x: utils.withGrid(5),
+              y: utils.withGrid(10),
+              direction: "up"
+            }
+          ]
+        }
+      ]
+    }
+  }
 };
