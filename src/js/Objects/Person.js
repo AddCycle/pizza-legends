@@ -6,6 +6,7 @@ export class Person extends GameObject {
     super(config);
     this.movingProgressRemaining = 0;
     this.isStanding = false;
+    this.intentPosition = null; // [x,y]
 
     this.isPlayerControlled = config.isPlayerControlled || false;
 
@@ -32,6 +33,9 @@ export class Person extends GameObject {
   }
 
   startBehaviour(state, behaviour) {
+    if (!this.isMounted) {
+      return;
+    }
     this.direction = behaviour.direction;
     if (behaviour.type === "walk") {
       if (state.map.isSpaceTaken(this.x, this.y, this.direction)) {
@@ -41,8 +45,15 @@ export class Person extends GameObject {
         return;
       }
 
-      state.map.moveWall(this.x, this.y, this.direction);
+      // ready to walk
       this.movingProgressRemaining = 16;
+      // add next position
+      const intentPosition = utils.nextPosition(this.x, this.y, this.direction);
+      this.intentPosition = [
+        intentPosition.x,
+        intentPosition.y
+      ];
+
       this.updateSprite(state);
     }
 
@@ -63,6 +74,8 @@ export class Person extends GameObject {
     this.movingProgressRemaining--;
 
     if (this.movingProgressRemaining === 0) {
+      // remove the intent finished the walk !
+      this.intentPosition = null;
       utils.emitEvent("PersonWalkingComplete", {
         whoId: this.id
       });

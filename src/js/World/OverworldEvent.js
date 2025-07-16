@@ -67,6 +67,9 @@ export class OverworldEvent {
   }
 
   changeMap(resolve) {
+    Object.values(this.map.gameObjects).forEach(obj => {
+      obj.isMounted = false;
+    })
     this.transition(() => this.map.overworld.startMap(OverworldMaps[this.event.map], {
       x: this.event.x,
       y: this.event.y,

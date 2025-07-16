@@ -1,11 +1,14 @@
 import { OverworldEvent } from "./OverworldEvent.js";
 import { utils } from '../utils.js';
 import { playerState } from "../State/PlayerState.js";
+import { PizzaStone } from "../Objects/PizzaStone.js";
+import { Person } from "../Objects/Person.js";
 
 export class OverworldMap {
   constructor(config) {
     this.overworld = null;
-    this.gameObjects = config.gameObjects;
+    this.gameObjects = {}; // live objects
+    this.configObjects = config.configObjects; // config objects
     this.cutsceneSpaces = config.cutsceneSpaces || {};
     this.walls = config.walls || {};
 
@@ -29,14 +32,32 @@ export class OverworldMap {
 
   isSpaceTaken(currentX, currentY, direction) {
     const { x, y } = utils.nextPosition(currentX, currentY, direction);
-    return this.walls[`${x}x${y}`] || false;
+    if (this.walls[`${x}x${y}`]) {
+      return true;
+    }
+    // check for gameObjects at this position
+    return Object.values(this.gameObjects).find(obj => {
+      if (obj.x === x && obj.y === y) return true;
+      if (obj.intentPosition && obj.intentPosition[0] === x && obj.intentPosition[1] === y) return true;
+      return false;
+    });
   }
 
   mountObjects() {
-    Object.keys(this.gameObjects).forEach(key => {
-      let object = this.gameObjects[key];
+    Object.keys(this.configObjects).forEach(key => {
+      let object = this.configObjects[key];
       object.id = key;
-      object.mount(this);
+
+      let instance;
+      if (object.type === "Person") {
+        instance = new Person(object);
+      }
+      if (object.type === "PizzaStone") {
+        instance = new PizzaStone(object);
+      }
+      this.gameObjects[key] = instance;
+      this.gameObjects[key].id = key;
+      instance.mount(this);
     });
   }
 
@@ -58,8 +79,9 @@ export class OverworldMap {
 
     this.isCutscenePlaying = false;
 
+    // INFO : this was a duplicate causing issues
     // resets NPCs to do their idle behaviour
-    Object.values(this.gameObjects).forEach(object => object.doBehaviourEvent(this));
+    // Object.values(this.gameObjects).forEach(object => object.doBehaviourEvent(this));
   }
 
   checkForActionCutscene() {
@@ -85,19 +107,5 @@ export class OverworldMap {
     if (!this.isCutscenePlaying && match) {
       this.startCutscene(match[0].events);
     }
-  }
-
-  addWall(x, y) {
-    this.walls[`${x}x${y}`] = true;
-  }
-
-  removeWall(x, y) {
-    delete this.walls[`${x}x${y}`];
-  }
-
-  moveWall(wasX, wasY, direction) {
-    this.removeWall(wasX, wasY);
-    const { x, y } = utils.nextPosition(wasX, wasY, direction);
-    this.addWall(x, y);
   }
 }

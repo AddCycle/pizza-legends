@@ -10,9 +10,10 @@ export const OverworldMaps = {
     id: "DemoRoom",
     lowerSrc: './src/assets/maps/DemoLower.png',
     upperSrc: './src/assets/maps/DemoUpper.png',
-    gameObjects: {
-      hero: new Person({ x: utils.withGrid(5), y: utils.withGrid(10), isPlayerControlled: true, direction: "up" }),
-      npcA: new Person({
+    configObjects: {
+      hero: { type: "Person", x: utils.withGrid(5), y: utils.withGrid(10), isPlayerControlled: true, direction: "up" },
+      npcA: {
+        type: "Person",
         x: utils.withGrid(4), y: utils.withGrid(7), src: "./src/assets/characters/people/npc1.png", direction: "up",
         behaviourLoop: [
           { type: "walk", direction: "left" },
@@ -35,15 +36,10 @@ export const OverworldMaps = {
               { type: "textMessage", text: "You crushed me like weak pepper", faceHero: "npcA" },
             ]
           },
-          // {
-          //   required: ["LOST_BATTLE"],
-          //   events: [
-          //     { type: "textMessage", text: "You are weak come back later", faceHero: "npcA" },
-          //   ]
-          // },
         ]
-      }),
-      npcB: new Person({
+      },
+      npcB: {
+        type: "Person",
         x: utils.withGrid(8), y: utils.withGrid(5), src: "./src/assets/characters/people/erio.png", direction: "up",
         behaviourLoop: [
           { type: "stand", direction: "up", time: 800 },
@@ -60,13 +56,14 @@ export const OverworldMaps = {
             ]
           }
         ]
-      }),
-      pizzaStone: new PizzaStone({
+      },
+      pizzaStone: {
+        type: "PizzaStone",
         x: utils.withGrid(2),
         y: utils.withGrid(7),
         storyFlag: "USED_PIZZA_STONE",
         pizzas: ["v001", "f001"]
-      }),
+      },
     },
     walls: {
       [utils.asGridCoord(7, 6)]: true,
@@ -106,9 +103,11 @@ export const OverworldMaps = {
     id: "Kitchen",
     lowerSrc: './src/assets/maps/KitchenLower.png',
     upperSrc: './src/assets/maps/KitchenUpper.png',
-    gameObjects: {
-      hero: new Person({ x, y, isPlayerControlled: true, direction: "down", }),
-      npcA: new Person({
+    configObjects:
+    {
+      hero: { type: "Person", x, y, isPlayerControlled: true, direction: "down", },
+      npcA: {
+        type: "Person",
         x: utils.withGrid(2), y: utils.withGrid(6), src: "./src/assets/characters/people/npc4.png", direction: "left",
         talking: [
           {
@@ -117,7 +116,7 @@ export const OverworldMaps = {
             ]
           }
         ]
-      }),
+      },
     },
     cutsceneSpaces: {
       [utils.asGridCoord(5, 10)]: [
@@ -139,8 +138,8 @@ export const OverworldMaps = {
     id: "Street",
     lowerSrc: './src/assets/maps/StreetLower.png',
     upperSrc: './src/assets/maps/StreetUpper.png',
-    gameObjects: {
-      hero: new Person({ x: utils.withGrid(30), y: utils.withGrid(10), isPlayerControlled: true, direction: "down", }),
+    configObjects: {
+      hero: { type: "Person", x: utils.withGrid(30), y: utils.withGrid(10), isPlayerControlled: true, direction: "down", },
     },
     cutsceneSpaces: {
       [utils.asGridCoord(29, 9)]: [

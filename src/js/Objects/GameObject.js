@@ -4,6 +4,7 @@ import { Sprite } from "../Objects/Sprite.js";
 export class GameObject {
   constructor(config) {
     this.id = null;
+    this.isMounted = false;
     this.x = config.x || 0;
     this.y = config.y || 0;
     this.direction = config.direction || "down";
@@ -16,11 +17,11 @@ export class GameObject {
     this.behaviourLoopIndex = 0;
 
     this.talking = config.talking || {};
+    this.retryTimeout = null;
   }
 
   mount(map) {
     this.isMounted = true;
-    map.addWall(this.x, this.y);
 
     setTimeout(() => {
       this.doBehaviourEvent(map);
@@ -31,7 +32,17 @@ export class GameObject {
 
   async doBehaviourEvent(map) {
 
-    if (map.isCutscenePlaying || this.behaviourLoop.length === 0 || this.isStanding) {
+    if (this.behaviourLoop.length === 0) {
+      return;
+    }
+
+    if (map.isCutscenePlaying) {
+      if (this.retryTimeout) {
+        clearTimeout(this.retryTimeout);
+      }
+      this.retryTimeout = setTimeout(() => {
+        this.doBehaviourEvent(map);
+      }, 1000);
       return;
     }
 
