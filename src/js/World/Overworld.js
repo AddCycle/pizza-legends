@@ -119,8 +119,8 @@ export class Overworld {
     this.titleScreen = new TitleScreen({
       progress: this.progress,
     });
-    // const useSaveFile = await this.titleScreen.init(container);
-    const useSaveFile = false;
+
+    const useSaveFile = await this.titleScreen.init(container);
 
     // potentially load saved data
     let initialHeroState = null;
@@ -149,9 +149,16 @@ export class Overworld {
 
     this.startGameLoop();
 
-    // this.map.startCutscene([
-    //   { type: "battle", enemyId: "beth" },
-    //   // { type: "changeMap", map: "DemoRoom" },
-    // ]);
+    this.map.startCutscene([
+      { who: "npcA", type: "walk", direction: "right" },
+      { who: "npcA", type: "walk", direction: "down" },
+      { who: "npcA", type: "walk", direction: "down" },
+      { type: "textMessage", text: "I will crush you...", faceHero: "npcA" },
+      { type: "battle", enemyId: "beth" },
+      { who: "npcA", type: "walk", direction: "up" },
+      { who: "npcA", type: "walk", direction: "up" },
+      { who: "npcA", type: "walk", direction: "left" },
+      // { type: "changeMap", map: "DemoRoom" },
+    ]);
   }
 }

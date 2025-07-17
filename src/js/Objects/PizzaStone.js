@@ -26,12 +26,18 @@ export class PizzaStone extends GameObject {
         ]
       },
       {
+        required: ["TALKED_TO_ERIO"],
         events: [
           { type: "textMessage", text: "Approaching the legendary pizza stone..." },
           { type: "craftingMenu", pizzas: this.pizzas },
           { type: "addStoryFlag", flag: this.storyFlag }
         ]
-      }
+      },
+      {
+        events: [
+          { type: "textMessage", text: "You will have to talk to Erio..." }
+        ]
+      },
     ];
   }
 
