@@ -1,3 +1,4 @@
+import { Controller } from "../Handlers/Controller.js";
 import { DirectionInput } from "../Handlers/DirectionInput.js";
 import { KeypressListener } from "../Handlers/KeypressListener.js";
 import { Progress } from "../State/Progress.js";
@@ -66,10 +67,10 @@ export class Overworld {
       }
       event.preventDefault();
     }); // right-click remover on window
-    new KeypressListener(['Enter', 'Space'], () => {
+    new KeypressListener(['Enter', 'Space', 'A'], () => {
       this.map.checkForActionCutscene();
     });
-    new KeypressListener(['Escape'], () => {
+    new KeypressListener(['Escape', 'X'], () => {
       this.pauseGame();
     });
   }
@@ -115,6 +116,16 @@ export class Overworld {
     // creates a new tracker
     this.progress = new Progress();
 
+    this.directionInput = new DirectionInput();
+    this.directionInput.init();
+
+    // gamepad related init
+    this.controller = new Controller(this.directionInput);
+    this.controller.init();
+
+    // controls
+    this.bindActionInput();
+
     // show the title screen
     this.titleScreen = new TitleScreen({
       progress: this.progress,
@@ -140,25 +151,20 @@ export class Overworld {
     // starts the map
     this.startMap(OverworldMaps[this.progress.mapId], initialHeroState);
 
-    // controls
-    this.bindActionInput();
     this.bindHeroPositionCheck();
-
-    this.directionInput = new DirectionInput();
-    this.directionInput.init();
 
     this.startGameLoop();
 
-    this.map.startCutscene([
-      { who: "npcA", type: "walk", direction: "right" },
-      { who: "npcA", type: "walk", direction: "down" },
-      { who: "npcA", type: "walk", direction: "down" },
-      { type: "textMessage", text: "I will crush you...", faceHero: "npcA" },
-      { type: "battle", enemyId: "beth" },
-      { who: "npcA", type: "walk", direction: "up" },
-      { who: "npcA", type: "walk", direction: "up" },
-      { who: "npcA", type: "walk", direction: "left" },
-      // { type: "changeMap", map: "DemoRoom" },
-    ]);
+    // this.map.startCutscene([
+    //   { who: "npcA", type: "walk", direction: "right" },
+    //   { who: "npcA", type: "walk", direction: "down" },
+    //   { who: "npcA", type: "walk", direction: "down" },
+    //   { type: "textMessage", text: "I will crush you...", faceHero: "npcA" },
+    //   { type: "battle", enemyId: "beth" },
+    //   { who: "npcA", type: "walk", direction: "up" },
+    //   { who: "npcA", type: "walk", direction: "up" },
+    //   { who: "npcA", type: "walk", direction: "left" },
+    //   // { type: "changeMap", map: "DemoRoom" },
+    // ]);
   }
 }

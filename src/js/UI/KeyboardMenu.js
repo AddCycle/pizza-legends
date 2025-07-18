@@ -20,7 +20,7 @@ export class KeyboardMenu {
           </button> 
           <span class="right">${option.right ? option.right() : ""}</span>
         </div>
-        `)
+        `);
     }).join('');
 
     this.element.querySelectorAll('button').forEach((b) => {
@@ -67,14 +67,14 @@ export class KeyboardMenu {
     (this.descriptionContainer || container).appendChild(this.descriptionElement);
     container.appendChild(this.element);
 
-    this.up = new KeypressListener(['ArrowUp'], () => {
+    this.up = new KeypressListener(['ArrowUp', 'UP'], () => {
       const current = Number(this.prevFocus.getAttribute('data-button'));
       const prevButton = Array.from(this.element.querySelectorAll('button[data-button]')).reverse().find(elt => {
         return elt.dataset.button < current && !elt.disabled;
       });
       prevButton?.focus();
     });
-    this.down = new KeypressListener(['ArrowDown'], () => {
+    this.down = new KeypressListener(['ArrowDown', 'DOWN'], () => {
       const current = Number(this.prevFocus.getAttribute('data-button'));
       const nextButton = Array.from(this.element.querySelectorAll('button[data-button]')).find(elt => {
         return elt.dataset.button > current && !elt.disabled;

@@ -1,3 +1,4 @@
+// TODO : later make a keybinds option
 export class DirectionInput {
   constructor() {
     this.heldDirections = [];
@@ -10,7 +11,20 @@ export class DirectionInput {
       "KeyW": "up",
       "KeyS": "down",
       "KeyA": "left",
-      "KeyD": "right",
+      "KeyD": "right"
+    }
+  }
+
+  controllerHandlerDown(dir) {
+    if (dir && this.heldDirections.indexOf(dir) === -1) {
+      this.heldDirections.unshift(dir);
+    }
+  }
+
+  controllerHandlerUp(dir) {
+    const index = this.heldDirections.indexOf(dir);
+    if (index > -1) {
+      this.heldDirections.splice(index, 1);
     }
   }
 
@@ -18,6 +32,7 @@ export class DirectionInput {
     return this.heldDirections[0];
   }
 
+  // TODO : add to the game loop the same behavior as those below
   init() {
     document.addEventListener('keydown', (e) => {
       const dir = this.map[e.code];

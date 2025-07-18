@@ -105,7 +105,7 @@ export class PauseMenu {
 
     container.appendChild(this.element);
 
-    this.esc = new KeypressListener(['Escape'], () => {
+    this.esc = new KeypressListener(['Escape', 'X'], () => {
       this.close();
     })
   }
