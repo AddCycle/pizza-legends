@@ -10,6 +10,7 @@ export class KeyboardMenu {
   }
 
   setOptions(options) {
+    console.log("SETTING OPTIONS")
     this.options = options;
     this.element.innerHTML = this.options.map((option, index) => {
       const disabledAttr = option.disabled ? "disabled" : "";
@@ -23,7 +24,17 @@ export class KeyboardMenu {
         `);
     }).join('');
 
+    // this is the focus and activation of the button using A button of controller but may lead to further issues
     this.element.querySelectorAll('button').forEach((b) => {
+      const enter = (e) => {
+        console.log("GAMEPAD KEY DOWN TRIGGERED IN KEYBOARD MENU")
+        console.log(e)
+        if (e.detail === 'A') {
+          const chosenOption = this.options[Number(b.dataset.button)];
+          chosenOption.handler();
+        }
+      };
+      window.addEventListener('gamepadkeydown', enter);
       b.addEventListener('click', () => {
         const chosenOption = this.options[Number(b.dataset.button)];
         chosenOption.handler();

@@ -123,9 +123,6 @@ export class Overworld {
     this.controller = new Controller(this.directionInput);
     this.controller.init();
 
-    // controls
-    this.bindActionInput();
-
     // show the title screen
     this.titleScreen = new TitleScreen({
       progress: this.progress,
@@ -150,6 +147,9 @@ export class Overworld {
 
     // starts the map
     this.startMap(OverworldMaps[this.progress.mapId], initialHeroState);
+
+    // controls
+    this.bindActionInput();
 
     this.bindHeroPositionCheck();
 
